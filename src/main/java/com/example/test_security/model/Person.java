@@ -18,7 +18,7 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     Long id;
+    Long id;
 
     @Column(name = "password")
     String password;
@@ -28,6 +28,9 @@ public class Person {
 
     @Column(name = "email", unique = true)
     String email;
+
+    @Column(name = "requisite", unique = true)
+    String requisite;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
