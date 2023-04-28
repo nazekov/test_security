@@ -41,6 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             .hasAuthority(Permission.PERSON_UPDATE.getPermission())
                 .antMatchers(HttpMethod.GET, "/api/one")
                             .hasAuthority(Permission.PERSON_DELETE.getPermission())
+                .antMatchers(HttpMethod.GET, "/admin")
+                            .hasAuthority(Permission.PERSON_DELETE.getPermission())
                 .anyRequest()
                 .authenticated()
                 .and()
