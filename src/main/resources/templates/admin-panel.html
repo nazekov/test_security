@@ -6,12 +6,60 @@
 </head>
 <body>
     <h1>Добро пожаловать в Админ панель</h1>
-    <p>Что вы желаете?</p>
+    <p>Добавить пользователя</p>
     <div>
-        <a href="/person">Создать пользователя</a>
+        <form action="/admin/add" method="POST" enctype="multipart/form-data">
+            <p>
+                <label for="name">
+                    Имя:
+                    <input type="text" id="name" name="name" placeholder="Имя" required="required">
+                </label>
+            </p>
+            <p>
+                <label for="email">
+                    Почта:
+                    <input type="text" id="email" name="email" placeholder="Почта" required="required">
+                </label>
+            </p>
+            <p>
+                <label for="password">
+                    Пароль:
+                    <input type="text" id="password" name="password" placeholder="Пароль" required="required">
+                </label>
+            </p>
+
+            <p>Выберите роль:</p>
+<!--            <div>-->
+<!--                <input type="radio" id="user"-->
+<!--                       name="role" value="USER">-->
+<!--                <label for="user">User</label>-->
+
+<!--                <input type="radio" id="moderator"-->
+<!--                       name="role" value="MODERATOR">-->
+<!--                <label for="moderator">Moderator</label>-->
+
+<!--                <input type="radio" id="admin"-->
+<!--                       name="role" value="ADMIN">-->
+<!--                <label for="admin">Admin</label>-->
+<!--            </div>-->
+            <select name="role" required="required">
+                <option value="">Выберите роль</option>
+                <option value="GUEST">Гость</option>
+                <option value="USER">Пользователь</option>
+                <option value="MODERATOR">Модератор</option>
+                <option value="ADMIN">Администратор</option>
+            </select>
+
+            <button type="submit">Добавить</button>
+        </form>
     </div>
+
     <div>
-        <a href="/admin">Черный список</a>
+        <a href="/admin/show-list/blocked">Черный список</a>
+    </div>
+
+    <div>
+        <a href="/logout">Выйти из системы</a>
     </div>
 </body>
 </html>
