@@ -23,7 +23,7 @@ public class BlockedPerson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     String requisite;
 
     @Enumerated(value = EnumType.STRING)
