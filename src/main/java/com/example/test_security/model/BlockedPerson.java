@@ -9,12 +9,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_status_users")
+@Table(name = "tb_blocked_users")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 @ToString
 public class BlockedPerson {
 
@@ -22,16 +23,15 @@ public class BlockedPerson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "person_blocked_id", referencedColumnName = "id")
-    Person blocked;
+    @Column(unique = true, nullable = false)
+    String requisite;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "service")
+    @Column(name = "service", nullable = false)
     Service service;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     Status status;
 
     @Column(name = "comment")
@@ -42,14 +42,16 @@ public class BlockedPerson {
     Date createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "person_createdBy_id", referencedColumnName = "id")
+    @JoinColumn(name = "person_created_by_id",
+                referencedColumnName = "id",
+                nullable = false)
     Person createdBy;
 
     @JsonFormat(pattern = "dd.MM.yyyy HH:mm:ss:S")
-    @Column(nullable = false)
     Date updatedDate;
 
     @ManyToOne
-    @JoinColumn(name = "person_updatedBy_id", referencedColumnName = "id")
+    @JoinColumn(name = "person_updated_by_id",
+                referencedColumnName = "id")
     Person updatedBy;
 }

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 @ToString
 public class Person {
 
@@ -20,7 +21,7 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "password")
+    @Column(name = "password", unique = true)
     String password;
 
     @Column(name = "name")
@@ -37,6 +38,6 @@ public class Person {
     Role role;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", columnDefinition = "ACTIVE")
     Status status;
 }
