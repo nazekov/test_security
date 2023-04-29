@@ -32,21 +32,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         System.out.println("configure(HttpSecurity http) throws Exception");
         http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/all").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/three")
-                            .hasAuthority(Permission.PERSON_CREATE.getPermission())
-                .antMatchers(HttpMethod.GET, "/api/two")
-                            .hasAuthority(Permission.PERSON_UPDATE.getPermission())
-                .antMatchers(HttpMethod.GET, "/api/one")
-                            .hasAuthority(Permission.PERSON_DELETE.getPermission())
-                .antMatchers(HttpMethod.GET, "/admin")
-                            .hasAuthority(Permission.PERSON_DELETE.getPermission())
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+            .csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/", "/api/all").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/three")
+                        .hasAuthority(Permission.PERSON_CREATE.getPermission())
+            .antMatchers(HttpMethod.GET, "/api/two")
+                        .hasAuthority(Permission.PERSON_UPDATE.getPermission())
+            .antMatchers(HttpMethod.GET, "/api/one")
+                        .hasAuthority(Permission.PERSON_DELETE.getPermission())
+            .antMatchers("/admin")
+                        .hasAuthority(Permission.PERSON_DELETE.getPermission())
+//                            .permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .formLogin().loginPage("/login").permitAll();
     }
 
     @Override
