@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
@@ -7,6 +8,10 @@
 </head>
 <body>
     <h1>Добро пожаловать в Админ панель</h1>
+    <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+    <p>Вы вошли, как</p>
+    <div sec:authentication="principal.username"></div>
+    <div sec:authentication="principal.authorities"></div>
     <p>Добавить пользователя</p>
     <div>
         <form action="/admin/add" method="POST" enctype="multipart/form-data">
