@@ -1,5 +1,6 @@
 package com.example.test_security.service.impl;
 
+import com.example.test_security.model.BlockedPerson;
 import com.example.test_security.model.Person;
 import com.example.test_security.repository.BlockedPersonRepository;
 import com.example.test_security.service.BlockedService;
@@ -15,7 +16,7 @@ public class BlockedServiceImpl implements BlockedService {
     }
 
     @Override
-    public BlockedPersonRepository add(Person person) {
-        return null;
+    public BlockedPerson add(Person person) {
+        return blockedPersonRepository.save(null);
     }
 }
