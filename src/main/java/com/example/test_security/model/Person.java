@@ -5,6 +5,7 @@ import com.example.test_security.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_users")
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @ToString
-public class Person {
+public class Person implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

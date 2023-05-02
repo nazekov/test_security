@@ -1,6 +1,6 @@
 package com.example.test_security.enums;
 
-public enum Service {
+public enum UserService {
 
     MOBILE_CONNECTIONS,
     INTERNET,

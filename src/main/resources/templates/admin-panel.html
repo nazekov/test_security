@@ -8,10 +8,11 @@
 </head>
 <body>
     <h1>Добро пожаловать в Админ панель</h1>
-    <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+<!--    <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>-->
     <p>Вы вошли, как</p>
-    <div sec:authentication="principal.username"></div>
-    <div sec:authentication="principal.authorities"></div>
+<!--    <div sec:authentication="principal.username"></div>-->
+    <span th:text="${#authentication.name}"></span>
+<!--    <div sec:authentication="principal.authorities"></div>-->
     <p>Добавить пользователя</p>
     <div>
         <form action="/admin/add" method="POST" enctype="multipart/form-data">
@@ -70,6 +71,46 @@
             <td th:text="${person.email}"></td>
             <td th:text="${person.requisite}"></td>
             <td th:text="${person.role}"></td>
+            <td>
+                <p th:if="${person.status == person.status.ACTIVE}">
+                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/' + ${#authentication.name} + '/ban/' + ${person.id}}" style="color: crimson">Забанить</a>
+                </p>
+                <p th:if="${person.status == person.status.BANNED}">
+                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/' + ${#authentication.name} + '/unban/' + ${person.id}}" style="color: darkgreen">Разбанить</a>
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2 style="margin: 50px 50px">
+        Черный список
+    </h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Номер реквизита</th>
+            <th>Сервис</th>
+            <th>Статус</th>
+            <th>Дата создания</th>
+            <th>Кем создан</th>
+            <th>Дата обновления</th>
+            <th>Кем обновлен</th>
+            <th>Комментарий</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="blockedPerson : ${blockedPersonList}">
+            <td th:text="${blockedPerson.id}"></td>
+            <td th:text="${blockedPerson.requisite}"></td>
+            <td th:text="${blockedPerson.userService}"></td>
+            <td th:text="${blockedPerson.status}"></td>
+            <td th:text="${blockedPerson.createdDate}"></td>
+            <td th:text="${blockedPerson.createdBy}"></td>
+            <td th:text="${blockedPerson.updatedDate}"></td>
+            <td th:text="${blockedPerson.updatedBy}"></td>
+            <td th:text="${blockedPerson.comment}"></td>
         </tr>
         </tbody>
     </table>

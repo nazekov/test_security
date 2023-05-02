@@ -1,8 +1,10 @@
 package com.example.test_security.service.impl;
 
+import com.example.test_security.exceptions.UserNotFoundException;
 import com.example.test_security.model.Person;
 import com.example.test_security.repository.PersonRepository;
 import com.example.test_security.service.PersonService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person add(Person person) {
+    public Person save(Person person) {
         return personRepository.save(person);
     }
 
@@ -29,4 +31,28 @@ public class PersonServiceImpl implements PersonService {
     public List<Person> findAll() {
         return personRepository.findAll();
     }
+
+    @Override
+    public Person findById(Long id) {
+        return personRepository.findById(id)
+                .orElseThrow(
+        () -> new UserNotFoundException("Person with this id not found.")
+                );
+    }
+
+    @Override
+    public Person findByEmail(String email) {
+        return personRepository.findByEmail(email)
+                .orElseThrow(
+        () -> new UsernameNotFoundException("Username does not exists.")
+                );
+    }
+
+//    @Override
+//    public Person findByRequisite(String requisite) {
+//        return personRepository.findByRequisite(requisite)
+//                .orElseThrow(
+//        () -> new UserNotFoundException("Person with this Requisite not exists.")
+//                );
+//    }
 }

@@ -34,7 +34,7 @@ public class AdminServiceImpl implements AdminService {
         person.setRequisite(requisite);
         person.setPassword(passwordEncoder.encode(person.getPassword()));
 
-        return personService.add(person);
+        return personService.save(person);
     }
 
     @Override

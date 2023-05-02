@@ -1,6 +1,6 @@
 package com.example.test_security.model;
 
-import com.example.test_security.enums.Service;
+import com.example.test_security.enums.UserService;
 import com.example.test_security.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -28,7 +28,7 @@ public class BlockedPerson {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "service", nullable = false)
-    Service service;
+    UserService userService;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -42,8 +42,8 @@ public class BlockedPerson {
     Date createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "person_created_by_id",
-                referencedColumnName = "id",
+    @JoinColumn(name = "person_created_by_email",
+                referencedColumnName = "email",
                 nullable = false)
     Person createdBy;
 
@@ -51,7 +51,7 @@ public class BlockedPerson {
     Date updatedDate;
 
     @ManyToOne
-    @JoinColumn(name = "person_updated_by_id",
-                referencedColumnName = "id")
+    @JoinColumn(name = "person_updated_by_email",
+                referencedColumnName = "email")
     Person updatedBy;
 }

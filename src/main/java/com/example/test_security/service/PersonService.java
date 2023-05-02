@@ -5,9 +5,15 @@ import java.util.List;
 
 public interface PersonService {
 
-    Person add(Person person);
+    Person save(Person person);
 
     boolean existsByRequisite(String requisite);
 
     List<Person> findAll();
+
+    Person findById(Long id);
+
+    Person findByEmail(String email);
+
+//    Person findByRequisite(String requisite);
 }

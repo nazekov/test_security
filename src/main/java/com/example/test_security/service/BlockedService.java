@@ -1,9 +1,11 @@
 package com.example.test_security.service;
 
 import com.example.test_security.model.BlockedPerson;
-import com.example.test_security.model.Person;
+import java.util.List;
 
 public interface BlockedService {
 
-    BlockedPerson add(Person person);
+    BlockedPerson add(Long personId, String email);
+
+    List<BlockedPerson> findAllBlockedPerson();
 }
