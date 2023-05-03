@@ -54,4 +54,7 @@ public class BlockedPerson {
     @JoinColumn(name = "person_updated_by_email",
                 referencedColumnName = "email")
     Person updatedBy;
+
+    @Column(name = "actual", nullable = false)
+    Boolean actual;
 }

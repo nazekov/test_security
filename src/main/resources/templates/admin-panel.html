@@ -107,9 +107,9 @@
             <td th:text="${blockedPerson.userService}"></td>
             <td th:text="${blockedPerson.status}"></td>
             <td th:text="${blockedPerson.createdDate}"></td>
-            <td th:text="${blockedPerson.createdBy}"></td>
+            <td th:text="${blockedPerson.createdBy.email}"></td>
             <td th:text="${blockedPerson.updatedDate}"></td>
-            <td th:text="${blockedPerson.updatedBy}"></td>
+            <td th:text="${blockedPerson.updatedBy} ? ${blockedPerson.updatedBy.email} : '----'"></td>
             <td th:text="${blockedPerson.comment}"></td>
         </tr>
         </tbody>

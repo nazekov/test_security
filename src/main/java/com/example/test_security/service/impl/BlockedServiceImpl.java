@@ -30,10 +30,6 @@ public class BlockedServiceImpl implements BlockedService {
     public BlockedPerson add(Long personId, String email) {
         Person person = personService.findById(personId);
         Person personAdmin = personService.findByEmail(email);
-//        Person createdBy = null;
-//        Person updatedBy = null;
-
-//        BlockedPerson newBlockedPerson = null;
 
         String requisite = null;
         UserService service = null;
@@ -42,47 +38,29 @@ public class BlockedServiceImpl implements BlockedService {
         Person createdBy = personAdmin;
         Date updated = new Date();
         Person updatedBy = null;
-        String comment = null;
+        String comment = "Updated Status";
 
         Optional<BlockedPerson> personByRequisite
-                = blockedPersonRepository.findByRequisite(person.getRequisite());
+            = blockedPersonRepository.findByRequisiteAndActual(
+                person.getRequisite(), true
+            );
 
         if (personByRequisite.isPresent()) {
             BlockedPerson blockedPerson = personByRequisite.get();
             Status newStatus = blockedPerson.getStatus() == Status.BANNED
                                             ? Status.ACTIVE : Status.BANNED;
-//            newBlockedPerson = BlockedPerson.builder()
-//                    .requisite(blockedPerson.getRequisite())
-//                    .userService(blockedPerson.getUserService())
-//                    .status(newStatus)
-//                    .createdDate(blockedPerson.getCreatedDate())
-//                    .createdBy(blockedPerson.getCreatedBy())
-//                    .updatedDate(new Date())
-//                    .updatedBy(updatedBy)
-//                    .comment("Updated Status")
-//                    .build();
 
             requisite = blockedPerson.getRequisite();
             service = blockedPerson.getUserService(); //надо обдумать
             status = newStatus;
             created = blockedPerson.getCreatedDate();
             createdBy = blockedPerson.getCreatedBy();
-            comment = "Updated Status";
             updatedBy = personAdmin;
 
+            blockedPerson.setActual(false);
+            blockedPersonRepository.save(blockedPerson);
             person.setStatus(newStatus);
         } else {
-//            createdBy = personAdmin;
-//            newBlockedPerson = BlockedPerson.builder()
-//                    .requisite(person.getRequisite())
-//                    .userService(UserService.INTERNET)
-//                    .status(Status.BANNED)
-//                    .createdDate(new Date())
-//                    .createdBy(createdBy)
-//                    .updatedDate(null)
-//                    .updatedBy(null)
-//                    .comment("Banned")
-//                    .build();
             requisite = person.getRequisite();
             service = UserService.INTERNET;
             status = Status.BANNED;
@@ -102,6 +80,7 @@ public class BlockedServiceImpl implements BlockedService {
                     .updatedDate(updated)
                     .updatedBy(updatedBy)
                     .comment(comment)
+                    .actual(true)
                     .build();
 
         return blockedPersonRepository.save(newBlockedPerson);
@@ -109,7 +88,6 @@ public class BlockedServiceImpl implements BlockedService {
 
     @Override
     public List<BlockedPerson> findAllBlockedPerson() {
-        List<BlockedPerson> all = blockedPersonRepository.findAll();
-        return all;
+        return blockedPersonRepository.findDistinctByActual(true);
     }
 }
