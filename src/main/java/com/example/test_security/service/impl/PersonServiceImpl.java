@@ -4,6 +4,7 @@ import com.example.test_security.exceptions.UserNotFoundException;
 import com.example.test_security.model.Person;
 import com.example.test_security.repository.PersonRepository;
 import com.example.test_security.service.PersonService;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -24,12 +25,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public boolean existsByRequisite(String requisite) {
-        return personRepository.findFirstByRequisite(requisite).isPresent();
+        return personRepository.findByRequisite(requisite).isPresent();
     }
 
     @Override
     public List<Person> findAll() {
-        return personRepository.findAll();
+        return personRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override
@@ -48,11 +49,11 @@ public class PersonServiceImpl implements PersonService {
                 );
     }
 
-//    @Override
-//    public Person findByRequisite(String requisite) {
-//        return personRepository.findByRequisite(requisite)
-//                .orElseThrow(
-//        () -> new UserNotFoundException("Person with this Requisite not exists.")
-//                );
-//    }
+    @Override
+    public Person findByRequisite(String requisite) {
+        return personRepository.findByRequisite(requisite)
+                .orElseThrow(
+        () -> new UserNotFoundException("Person with this Requisite not exists.")
+                );
+    }
 }

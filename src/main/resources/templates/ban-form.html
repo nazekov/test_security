@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <p>Вы вошли, как</p>
+    <span th:text="${#authentication.name}"></span>
+    <form th:object="${blockedPerson}"
+          method="post"
+          th:action="@{'/black-list/' + ${#authentication.name} + '/ban'}">
+        <p>
+            Номер реквизита пользователя
+            <input type="text" name="requisite" th:field="${blockedPerson.requisite}"/>
+        </p>
+        <p>
+            <label for="comment">Комментарий. Почему Вы желаете забанить пользователя</label>
+            <input type="text" th:field="*{comment}" id="comment" name="comment" placeholder="Комментарий">
+        </p>
+        <p>При какой услуге произошло мошенничество:</p>
+        <select name="service" th:field="*{userService}" required="required">
+            <option value="">Выберите услугу</option>
+            <option value="MOBILE_CONNECTIONS">Мобильная связь</option>
+            <option value="INTERNET">Интернет</option>
+            <option value="UTILITY_PAYMENTS">Коммунальные платежи</option>
+            <option value="TAXES">Налоги</option>
+        </select>
+        <button type="submit">Забанить</button>
+    </form>
+
+    <div>
+        <a href="/logout">Выйти из системы</a>
+    </div>
+</body>
+</html>

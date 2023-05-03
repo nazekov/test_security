@@ -1,14 +1,13 @@
 package com.example.test_security.service.impl;
 
 import com.example.test_security.enums.Status;
-import com.example.test_security.enums.UserService;
+import com.example.test_security.exceptions.UserNotFoundException;
 import com.example.test_security.model.BlockedPerson;
 import com.example.test_security.model.Person;
 import com.example.test_security.repository.BlockedPersonRepository;
 import com.example.test_security.service.BlockedService;
 import com.example.test_security.service.PersonService;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,59 +26,33 @@ public class BlockedServiceImpl implements BlockedService {
     }
 
     @Override
-    public BlockedPerson add(Long personId, String email) {
+    public BlockedPerson update(Long personId, String email) {
         Person person = personService.findById(personId);
         Person personAdmin = personService.findByEmail(email);
 
-        String requisite = null;
-        UserService service = null;
-        Status status = null;
-        Date created = new Date();
-        Person createdBy = personAdmin;
-        Date updated = new Date();
-        Person updatedBy = null;
-        String comment = "Updated Status";
-
-        Optional<BlockedPerson> personByRequisite
+        BlockedPerson blockedPerson
             = blockedPersonRepository.findByRequisiteAndActual(
                 person.getRequisite(), true
+            ).orElseThrow(
+    () -> new UserNotFoundException("This requisite not found")
             );
+        Status newStatus = blockedPerson.getStatus() == Status.BANNED
+                                        ? Status.ACTIVE : Status.BANNED;
+        blockedPerson.setActual(false);
+        blockedPersonRepository.save(blockedPerson);
 
-        if (personByRequisite.isPresent()) {
-            BlockedPerson blockedPerson = personByRequisite.get();
-            Status newStatus = blockedPerson.getStatus() == Status.BANNED
-                                            ? Status.ACTIVE : Status.BANNED;
-
-            requisite = blockedPerson.getRequisite();
-            service = blockedPerson.getUserService(); //надо обдумать
-            status = newStatus;
-            created = blockedPerson.getCreatedDate();
-            createdBy = blockedPerson.getCreatedBy();
-            updatedBy = personAdmin;
-
-            blockedPerson.setActual(false);
-            blockedPersonRepository.save(blockedPerson);
-            person.setStatus(newStatus);
-        } else {
-            requisite = person.getRequisite();
-            service = UserService.INTERNET;
-            status = Status.BANNED;
-            updated = null;
-            comment = "Banned";
-
-            person.setStatus(Status.BANNED);
-        }
+        person.setStatus(newStatus);
         personService.save(person);
 
         BlockedPerson newBlockedPerson = BlockedPerson.builder()
-                    .requisite(requisite)
-                    .userService(service)
-                    .status(status)
-                    .createdDate(created)
-                    .createdBy(createdBy)
-                    .updatedDate(updated)
-                    .updatedBy(updatedBy)
-                    .comment(comment)
+                    .requisite(blockedPerson.getRequisite())
+                    .userService(blockedPerson.getUserService())
+                    .status(newStatus)
+                    .createdDate(blockedPerson.getCreatedDate())
+                    .createdBy(blockedPerson.getCreatedBy())
+                    .updatedDate(new Date())
+                    .updatedBy(personAdmin)
+                    .comment("Updated Status")
                     .actual(true)
                     .build();
 
@@ -89,5 +62,39 @@ public class BlockedServiceImpl implements BlockedService {
     @Override
     public List<BlockedPerson> findAllBlockedPerson() {
         return blockedPersonRepository.findDistinctByActual(true);
+    }
+
+    @Override
+    public BlockedPerson ban(BlockedPerson blockedPerson, String email) {
+        Person person = personService.findByRequisite(blockedPerson.getRequisite());
+        Person personAdmin = personService.findByEmail(email);
+
+        blockedPerson.setStatus(Status.BANNED);
+        blockedPerson.setActual(true);
+
+        Optional<BlockedPerson> optionalBlockedPerson
+            = blockedPersonRepository.findByRequisiteAndActual(
+                blockedPerson.getRequisite(), true
+            );
+
+        if (optionalBlockedPerson.isPresent()) {
+            BlockedPerson blockedPersonExists = optionalBlockedPerson.get();
+            blockedPersonExists.setActual(false);
+
+            blockedPerson.setCreatedDate(blockedPersonExists.getCreatedDate());
+            blockedPerson.setCreatedBy(blockedPersonExists.getCreatedBy());
+            blockedPerson.setUpdatedDate(new Date());
+            blockedPerson.setUpdatedBy(personAdmin);
+
+            blockedPersonRepository.save(blockedPersonExists);
+        } else {
+            blockedPerson.setCreatedDate(new Date());
+            blockedPerson.setCreatedBy(personAdmin);
+        }
+
+        person.setStatus(Status.BANNED);
+        personService.save(person);
+
+        return blockedPersonRepository.save(blockedPerson);
     }
 }

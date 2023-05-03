@@ -5,7 +5,9 @@ import java.util.List;
 
 public interface BlockedService {
 
-    BlockedPerson add(Long personId, String email);
+    BlockedPerson update(Long personId, String email);
 
     List<BlockedPerson> findAllBlockedPerson();
+
+    BlockedPerson ban(BlockedPerson blockedPerson, String email);
 }

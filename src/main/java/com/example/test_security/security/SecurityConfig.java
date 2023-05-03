@@ -41,9 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .hasAuthority(Permission.PERSON_UPDATE.getPermission())
             .antMatchers(HttpMethod.GET, "/api/one")
                         .hasAuthority(Permission.PERSON_DELETE.getPermission())
-            .antMatchers("/admin")
+            .antMatchers("/admin", "/black-list")
                         .hasAuthority(Permission.PERSON_DELETE.getPermission())
-//                            .permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin().loginPage("/login").permitAll();

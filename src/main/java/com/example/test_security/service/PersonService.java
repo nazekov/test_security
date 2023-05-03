@@ -15,5 +15,5 @@ public interface PersonService {
 
     Person findByEmail(String email);
 
-//    Person findByRequisite(String requisite);
+    Person findByRequisite(String requisite);
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
@@ -7,7 +7,10 @@
 <body>
     <h1>Welcome to All</h1>
     <div>
-        <p>Войти в систему</p>
+        <p th:text="'Вы вошли, как' + ${#authentication.name}"></p>
+    </div>
+    <div>
+<!--        <p>Войти в систему</p>-->
         <a href="/login">Вход в систему</a>
     </div>
 <!--    <div>-->
