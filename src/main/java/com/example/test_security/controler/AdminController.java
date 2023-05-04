@@ -41,7 +41,7 @@ public class AdminController {
                         .name(data.get("name"))
                         .role(Role.valueOf(data.get("role")))
                         .password(data.get("password"))
-                        .userName(data.get("username"))
+                        .username(data.get("username"))
                         .build();
 
         System.out.println("Map<String, String> " + data);
