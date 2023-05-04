@@ -1,6 +1,5 @@
 package com.example.test_security.security;
 
-import com.example.test_security.enums.Status;
 import com.example.test_security.model.Person;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -62,15 +61,15 @@ public class PersonDetails implements UserDetails {
         return isActive;
     }
 
-    public static UserDetails fromUser(Person user) {
+    public static UserDetails fromPerson(Person person) {
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getRole().getAuthorities()
+                person.getUsername(),
+                person.getPassword(),
+                true,
+                true,
+                true,
+                true,
+                person.getRole().getAuthorities()
         );
     }
 }

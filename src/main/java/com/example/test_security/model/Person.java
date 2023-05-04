@@ -1,7 +1,6 @@
 package com.example.test_security.model;
 
 import com.example.test_security.enums.Role;
-import com.example.test_security.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
@@ -22,23 +21,16 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "password", unique = true)
-    String password;
-
     @Column(name = "name")
     String name;
 
-    @Column(name = "email", unique = true)
-    String email;
+    @Column(name = "username", unique = true)
+    String username;
 
-    @Column(name = "requisite", unique = true)
-    String requisite;
+    @Column(name = "password", unique = true)
+    String password;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
     Role role;
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "status", columnDefinition = "ACTIVE")
-    Status status;
 }

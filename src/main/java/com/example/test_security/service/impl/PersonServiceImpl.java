@@ -1,6 +1,5 @@
 package com.example.test_security.service.impl;
 
-import com.example.test_security.exceptions.UserNotFoundException;
 import com.example.test_security.model.Person;
 import com.example.test_security.repository.PersonRepository;
 import com.example.test_security.service.PersonService;
@@ -23,37 +22,37 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.save(person);
     }
 
-    @Override
-    public boolean existsByRequisite(String requisite) {
-        return personRepository.findByRequisite(requisite).isPresent();
-    }
+//    @Override
+//    public boolean existsByRequisite(String requisite) {
+//        return personRepository.findByRequisite(requisite).isPresent();
+//    }
 
     @Override
     public List<Person> findAll() {
         return personRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
-    @Override
-    public Person findById(Long id) {
-        return personRepository.findById(id)
-                .orElseThrow(
-        () -> new UserNotFoundException("Person with this id not found.")
-                );
-    }
+//    @Override
+//    public Person findById(Long id) {
+//        return personRepository.findById(id)
+//                .orElseThrow(
+//        () -> new UserNotFoundException("Person with this id not found.")
+//                );
+//    }
 
     @Override
-    public Person findByEmail(String email) {
-        return personRepository.findByEmail(email)
+    public Person findByUsername(String username) {
+        return personRepository.findByUsername(username)
                 .orElseThrow(
         () -> new UsernameNotFoundException("Username does not exists.")
                 );
     }
 
-    @Override
-    public Person findByRequisite(String requisite) {
-        return personRepository.findByRequisite(requisite)
-                .orElseThrow(
-        () -> new UserNotFoundException("Person with this Requisite not exists.")
-                );
-    }
+//    @Override
+//    public Person findByRequisite(String requisite) {
+//        return personRepository.findByRequisite(requisite)
+//                .orElseThrow(
+//        () -> new UserNotFoundException("Person with this Requisite not exists.")
+//                );
+//    }
 }

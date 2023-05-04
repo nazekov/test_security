@@ -9,10 +9,6 @@
     <div>
         <p th:text="'Вы вошли, как' + ${#authentication.name}"></p>
     </div>
-    <div>
-<!--        <p>Войти в систему</p>-->
-        <a href="/login">Вход в систему</a>
-    </div>
 <!--    <div>-->
 <!--        <p>Посмотреть всех пользователей</p>-->
 <!--        <a href="/person">Список пользователей</a>-->
@@ -21,6 +17,8 @@
         <p>Перейти в админ панель</p>
         <a href="/admin">Админ панель</a>
     </div>
-
+    <div style="margin-top: 50px">
+        <a href="/logout">Выйти из системы</a>
+    </div>
 </body>
 </html>

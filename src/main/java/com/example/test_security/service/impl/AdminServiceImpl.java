@@ -22,17 +22,17 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Person add(Person person) {
-        long lowDiapazon = 1_000_000_000L;
-        long topDiapazon = 9_999_999_999L;
-        long requisiteNum = (long) ((Math.random() * (topDiapazon - lowDiapazon)) + lowDiapazon);
+//        long lowDiapazon = 1_000_000_000L;
+//        long topDiapazon = 9_999_999_999L;
+//        long requisiteNum = (long) ((Math.random() * (topDiapazon - lowDiapazon)) + lowDiapazon);
 
-        String requisite = String.valueOf(requisiteNum);
+//        String requisite = String.valueOf(requisiteNum);
 
-        while (personService.existsByRequisite(requisite)) {
-            requisiteNum = (long) (Math.random() * (topDiapazon - lowDiapazon)) + lowDiapazon;
-            requisite = String.valueOf(requisiteNum);
-        }
-        person.setRequisite(requisite);
+//        while (personService.existsByRequisite(requisite)) {
+//            requisiteNum = (long) (Math.random() * (topDiapazon - lowDiapazon)) + lowDiapazon;
+//            requisite = String.valueOf(requisiteNum);
+//        }
+//        person.setRequisite(requisite);
         person.setPassword(passwordEncoder.encode(person.getPassword()));
 
         return personService.save(person);

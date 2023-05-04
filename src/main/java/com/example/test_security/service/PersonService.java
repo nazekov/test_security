@@ -7,13 +7,13 @@ public interface PersonService {
 
     Person save(Person person);
 
-    boolean existsByRequisite(String requisite);
+//    boolean existsByRequisite(String requisite);
 
     List<Person> findAll();
 
-    Person findById(Long id);
-
-    Person findByEmail(String email);
-
-    Person findByRequisite(String requisite);
+//    Person findById(Long id);
+//
+    Person findByUsername(String username);
+//
+//    Person findByRequisite(String requisite);
 }

@@ -34,18 +34,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/", "/api/all").permitAll()
+            .antMatchers( "/api/all").permitAll()
             .antMatchers(HttpMethod.GET, "/api/three")
                         .hasAuthority(Permission.PERSON_CREATE.getPermission())
             .antMatchers(HttpMethod.GET, "/api/two")
                         .hasAuthority(Permission.PERSON_UPDATE.getPermission())
             .antMatchers(HttpMethod.GET, "/api/one")
                         .hasAuthority(Permission.PERSON_DELETE.getPermission())
-            .antMatchers("/admin", "/black-list")
+            .antMatchers("/admin/**", "/black-list/**")
                         .hasAuthority(Permission.PERSON_DELETE.getPermission())
             .anyRequest().authenticated()
             .and()
-            .formLogin().loginPage("/login").permitAll();
+            .formLogin().loginPage("/login").permitAll()
+            .defaultSuccessUrl("/")
+            .and()
+            .logout()
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
+            .logoutSuccessUrl("/login");
     }
 
     @Override
