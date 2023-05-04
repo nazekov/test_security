@@ -73,7 +73,7 @@
             <td th:text="${person.role}"></td>
             <td>
                 <p th:if="${person.status == person.status.ACTIVE}">
-                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/ban-form/' + ${person.id}}" style="color: crimson">На форму бана</a>
+                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/ban-form/' + ${person.id}}" style="color: crimson">Забанить</a>
                 </p>
                 <p th:if="${person.status == person.status.BANNED}">
                     <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/' + ${#authentication.name} + '/unban/' + ${person.id}}" style="color: darkgreen">Разбанить</a>
