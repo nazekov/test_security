@@ -32,16 +32,24 @@ public class BlockedRequisiteController {
 
     @PostMapping("/{username}/ban")
     public String ban(@ModelAttribute BlockedRequisite blockedRequisite,
-                      @PathVariable String username) {
-        blockedRequisiteService.ban(blockedRequisite, username);
+                        @PathVariable String username) {
+//        blockedRequisiteService.ban(blockedRequisite, username);
         return "redirect:/admin";
     }
 
-    @GetMapping("/{username}/unban/{personId}")
-    public String unban(@PathVariable Long personId,
+    @PostMapping("/{username}/ban/{requisite}")
+    public String ban(/*@ModelAttribute BlockedRequisite blockedRequisite,*/
+                        @PathVariable Long requisite,
+                        @PathVariable String username) {
+//        blockedRequisiteService.ban(blockedRequisite, username);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/{username}/unban/{requisite}")
+    public String unban(@PathVariable Long requisite,
                       @PathVariable String username) {
-        System.out.println("personId " + personId + " ----username---- " + username);
-        blockedRequisiteService.update(personId, username);
+        System.out.println("requisite " + requisite + " ----username---- " + username);
+//        blockedRequisiteService.update(personId, username);
         return "redirect:/admin";
     }
 }
