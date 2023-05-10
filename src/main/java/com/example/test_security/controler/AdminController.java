@@ -3,6 +3,7 @@ package com.example.test_security.controler;
 import com.example.test_security.enums.Role;
 import com.example.test_security.model.Person;
 import com.example.test_security.service.AdminService;
+import com.example.test_security.util.ValidatePersonService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,12 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    public AdminController(AdminService adminService) {
+    private final ValidatePersonService validatePersonService;
+
+    public AdminController(AdminService adminService,
+                           ValidatePersonService validatePersonService) {
         this.adminService = adminService;
+        this.validatePersonService = validatePersonService;
     }
 
     @GetMapping
@@ -45,7 +50,11 @@ public class AdminController {
                         .build();
 
         System.out.println("Map<String, String> " + data);
+
+        if (validatePersonService.findByUsername(person).isPresent()) {
+            return "errors/add-error";
+        }
         adminService.add(person);
-        return "redirect:/admin";
+        return "redirect:/admin/add-form";
     }
 }

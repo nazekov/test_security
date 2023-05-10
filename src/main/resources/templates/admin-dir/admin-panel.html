@@ -5,6 +5,8 @@
     <title>Admin-panel</title>
 </head>
 <body>
+    <p>Вы вошли, как</p>
+    <span th:text="${#authentication.name}"></span>
     <div>
         <a href="/admin/add-form">Добавить пользователя</a>
     </div>
