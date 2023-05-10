@@ -1,12 +1,15 @@
 package com.example.test_security.service.impl;
 
 import com.example.test_security.enums.Status;
+import com.example.test_security.exceptions.RequisiteNotFoundException;
 import com.example.test_security.model.BlockedRequisite;
 import com.example.test_security.model.Person;
 import com.example.test_security.repository.BlockedRequisiteRepository;
 import com.example.test_security.service.BlockedRequisiteService;
 import com.example.test_security.service.PersonService;
 import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,38 +26,37 @@ public class BlockedRequisiteServiceImpl implements BlockedRequisiteService {
     }
 
     @Override
-    public BlockedRequisite update(Long personId, String email) {
-//        Person person = personService.findById(personId);
-//        Person personAdmin = personService.findByUsername(email);
-//
-//        BlockedRequisite blockedRequisite
-//            = blockedPersonRepository.findByRequisiteAndActual(
-//                person.getRequisite(), true
-//            ).orElseThrow(
-//    () -> new UserNotFoundException("This requisite not found")
-//            );
-//        Status newStatus = blockedRequisite.getStatus() == Status.BANNED
-//                                        ? Status.ACTIVE : Status.BANNED;
-//        blockedRequisite.setActual(false);
-//        blockedPersonRepository.save(blockedRequisite);
-//
-//        person.setStatus(newStatus);
-//        personService.save(person);
-//
-//        BlockedRequisite newBlockedRequisite = BlockedRequisite.builder()
-//                    .requisite(blockedRequisite.getRequisite())
-//                    .serviceId(blockedRequisite.getServiceId())
-//                    .status(newStatus)
-//                    .createdDate(blockedRequisite.getCreatedDate())
-//                    .createdBy(blockedRequisite.getCreatedBy())
-//                    .updatedDate(new Date())
-//                    .updatedBy(personAdmin)
-//                    .comment("Updated Status")
-//                    .actual(true)
-//                    .build();
-//
-//        return blockedPersonRepository.save(newBlockedRequisite);
-        return null;
+    public BlockedRequisite update(Long requisiteId, String username) {
+
+        Person personAdmin = personService.findByUsername(username);
+
+        BlockedRequisite blockedRequisiteFound
+            = blockedRequisiteRepository.findById(requisiteId)
+            .orElseThrow(
+    () -> new RequisiteNotFoundException("Реквизит не найден")
+            );
+        blockedRequisiteFound.setActual(false);
+        blockedRequisiteRepository.save(blockedRequisiteFound);
+
+        String comment = blockedRequisiteFound.getStatus() == Status.BANNED
+                        ? "Снят с бана" : "Забанен снова";
+
+        Status newStatus = blockedRequisiteFound.getStatus() == Status.BANNED
+                                                ? Status.ACTIVE : Status.BANNED;
+
+        BlockedRequisite newBlockedRequisite = BlockedRequisite.builder()
+                    .requisite(blockedRequisiteFound.getRequisite())
+                    .serviceId(blockedRequisiteFound.getServiceId())
+                    .status(newStatus)
+                    .createdDate(blockedRequisiteFound.getCreatedDate())
+                    .createdBy(blockedRequisiteFound.getCreatedBy())
+                    .updatedDate(new Date())
+                    .updatedBy(personAdmin)
+                    .comment(comment)
+                    .actual(true)
+                    .build();
+
+        return blockedRequisiteRepository.save(newBlockedRequisite);
     }
 
 //    @Override
@@ -65,53 +67,54 @@ public class BlockedRequisiteServiceImpl implements BlockedRequisiteService {
     @Override
     public BlockedRequisite ban(BlockedRequisite blockedRequisite, String username) {
 
-//        Person person = personService.findByRequisite(blockedRequisite.getRequisite());
         Person personAdmin = personService.findByUsername(username);
 
-        Optional<BlockedRequisite> optionalBlockedRequisite
-            = blockedRequisiteRepository.findByRequisiteAndServiceIdAndStatusAndActual(
+        List<BlockedRequisite> allByRequisiteAndServiceId = blockedRequisiteRepository
+                .findAllByRequisiteAndServiceId(
+                    blockedRequisite.getRequisite(),
+                    blockedRequisite.getServiceId()
+                );
+
+        Date createdDate = new Date();
+        Person createdBy = personAdmin;
+        Date updatedDate = null;
+        Person updatedBy = null;
+
+        if (allByRequisiteAndServiceId.size() != 0) {
+            BlockedRequisite requisiteFound = allByRequisiteAndServiceId.stream()
+                    .filter(blockedRequisite1 -> blockedRequisite1.getActual() == true)
+                    .findFirst()
+                    .orElseThrow(() -> new RequisiteNotFoundException("Реквизит не найден"));
+            requisiteFound.setActual(false);
+            blockedRequisiteRepository.save(requisiteFound);
+
+            createdDate = requisiteFound.getCreatedDate();
+            createdBy = requisiteFound.getCreatedBy();
+            updatedDate = new Date();
+            updatedBy = personAdmin;
+        }
+        blockedRequisite.setCreatedDate(createdDate);
+        blockedRequisite.setCreatedBy(createdBy);
+        blockedRequisite.setUpdatedDate(updatedDate);
+        blockedRequisite.setUpdatedBy(updatedBy);
+        blockedRequisite.setStatus(Status.BANNED);
+        blockedRequisite.setActual(true);
+
+        return blockedRequisiteRepository.save(blockedRequisite);
+    }
+
+    @Override
+    public Optional<BlockedRequisite> findAlreadyBannedRequisite(BlockedRequisite blockedRequisite) {
+        return blockedRequisiteRepository.findByRequisiteAndServiceIdAndStatusAndActual(
                 blockedRequisite.getRequisite(),
                 blockedRequisite.getServiceId(),
                 Status.BANNED,
-                true);
+                true
+        );
+    }
 
-        if (optionalBlockedRequisite.isEmpty()) {
-            blockedRequisite.setStatus(Status.BANNED);
-            blockedRequisite.setActual(true);
-            blockedRequisiteRepository.save(blockedRequisite);
-
-            blockedRequisiteRepository.findFirstByRequisiteAndServiceId(
-                blockedRequisite.getRequisite(),
-                blockedRequisite.getServiceId()
-            ); //надо обдумать
-        }
-
-//        blockedRequisite.setActual(true);
-//
-//        Optional<BlockedRequisite> optionalBlockedPerson
-//            = blockedPersonRepository.findByRequisiteAndActual(
-//                blockedRequisite.getRequisite(), true
-//            );
-//
-//        if (optionalBlockedPerson.isPresent()) {
-//            BlockedRequisite blockedRequisiteExists = optionalBlockedPerson.get();
-//            blockedRequisiteExists.setActual(false);
-//
-//            blockedRequisite.setCreatedDate(blockedRequisiteExists.getCreatedDate());
-//            blockedRequisite.setCreatedBy(blockedRequisiteExists.getCreatedBy());
-//            blockedRequisite.setUpdatedDate(new Date());
-//            blockedRequisite.setUpdatedBy(personAdmin);
-//
-//            blockedPersonRepository.save(blockedRequisiteExists);
-//        } else {
-//            blockedRequisite.setCreatedDate(new Date());
-//            blockedRequisite.setCreatedBy(personAdmin);
-//        }
-//
-//        person.setStatus(Status.BANNED);
-//        personService.save(person);
-//
-//        return blockedPersonRepository.save(blockedRequisite);
-        return null;
+    @Override
+    public List<BlockedRequisite> findAll() {
+        return blockedRequisiteRepository.findAllByActualAndOrderByRequisite(true);
     }
 }

@@ -14,7 +14,7 @@
           th:action="@{'/black-list/' + ${#authentication.name} + '/ban'}">
         <p>
             Номер реквизита пользователя
-            <input type="text" name="requisite" th:field="${blockedRequisite.requisite}"/>
+            <input type="text" name="requisite" th:field="${blockedRequisite.requisite}" required="required"/>
         </p>
         <p>
             <label for="comment">Комментарий. Почему Вы желаете забанить пользователя</label>
@@ -55,18 +55,24 @@
 <!--            <td th:text="${blockedRequisite.id}"></td>-->
             <td th:text="${blockedRequisite.requisite}"></td>
             <td th:text="${blockedRequisite.serviceId}"></td>
-            <td th:text="${blockedRequisite.status}"></td>
+            <td>
+                <p th:if="${blockedRequisite.status == blockedRequisite.status.ACTIVE}" style="color: darkgreen" th:text="${blockedRequisite.status}">
+                </p>
+                <p th:if="${blockedRequisite.status == blockedRequisite.status.BANNED}" style="color: crimson" th:text="${blockedRequisite.status}">
+                </p>
+            </td>
             <td th:text="${blockedRequisite.createdDate}"></td>
             <td th:text="${blockedRequisite.createdBy.username}"></td>
             <td th:text="${blockedRequisite.updatedDate}"></td>
-            <td th:text="${blockedRequisite.updatedBy} ? ${blockedRequisite.updatedBy.username} : '----'"></td>
+            <td th:text="${blockedRequisite.updatedBy} ? ${blockedRequisite.updatedBy.username} : ''"></td>
             <td th:text="${blockedRequisite.comment}"></td>
             <td>
                 <p th:if="${blockedRequisite.status == blockedRequisite.status.ACTIVE}">
-                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/' + ${#authentication.name} + '/ban/' + ${blockedRequisite.requisite}}" style="color: crimson">Забанить</a>
+                    <!--/*@thymesVar id="requisite" type="com.example.test_security.model.BlockedRequisite"*/-->
+                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/' + ${#authentication.name} + '/ban/' + ${blockedRequisite.id}}" style="color: crimson">Забанить</a>
                 </p>
                 <p th:if="${blockedRequisite.status == blockedRequisite.status.BANNED}">
-                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/' + ${#authentication.name} + '/unban/' + ${blockedRequisite.requisite}}" style="color: darkgreen">Разбанить</a>
+                    <a th:if="${#authentication.isAuthenticated()}" th:href="@{'/black-list/' + ${#authentication.name} + '/unban/' + ${blockedRequisite.id}}" style="color: darkgreen">Разбанить</a>
                 </p>
             </td>
         </tr>
