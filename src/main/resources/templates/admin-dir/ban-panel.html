@@ -37,7 +37,6 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-<!--            <th>Id</th>-->
             <th>Номер реквизита</th>
             <th>Сервис</th>
             <th>Статус</th>
@@ -52,7 +51,6 @@
         <tbody>
         <!--/*@thymesVar id="blockedRequisiteList" type="com.example.test_security.model.BlockedRequisite"*/-->
         <tr th:each="blockedRequisite : ${blockedRequisiteList}">
-<!--            <td th:text="${blockedRequisite.id}"></td>-->
             <td th:text="${blockedRequisite.requisite}"></td>
             <td th:text="${blockedRequisite.serviceId}"></td>
             <td>
