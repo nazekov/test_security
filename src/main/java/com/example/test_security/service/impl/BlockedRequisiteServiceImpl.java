@@ -1,5 +1,6 @@
 package com.example.test_security.service.impl;
 
+import com.example.test_security.enums.ServiceId;
 import com.example.test_security.enums.Status;
 import com.example.test_security.exceptions.RequisiteNotFoundException;
 import com.example.test_security.model.BlockedRequisite;
@@ -7,6 +8,7 @@ import com.example.test_security.model.Person;
 import com.example.test_security.repository.BlockedRequisiteRepository;
 import com.example.test_security.service.BlockedRequisiteService;
 import com.example.test_security.service.PersonService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
@@ -116,5 +118,27 @@ public class BlockedRequisiteServiceImpl implements BlockedRequisiteService {
     @Override
     public List<BlockedRequisite> findAll() {
         return blockedRequisiteRepository.findAllByActualAndOrderByRequisite(true);
+    }
+
+    @Override
+    public ResponseEntity<?> getStatus(String requisite, ServiceId serviceId) {
+        int httpStatus = 400;
+        if (serviceId != null) {
+            Optional<BlockedRequisite> optionalBlockedRequisite
+                = blockedRequisiteRepository.findFirstByRequisiteAndServiceId(
+                        requisite, serviceId
+                    );
+
+            if (optionalBlockedRequisite.isPresent()) {
+                httpStatus = 200;
+            }
+        } else {
+            Optional<BlockedRequisite> optionalBlockedRequisite
+                    = blockedRequisiteRepository.findFirstByRequisite(requisite);
+            if (optionalBlockedRequisite.isPresent()) {
+                httpStatus = 200;
+            }
+        }
+        return ResponseEntity.status(httpStatus).body(null);
     }
 }

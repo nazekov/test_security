@@ -1,8 +1,10 @@
 package com.example.test_security.controler;
 
+import com.example.test_security.enums.ServiceId;
 import com.example.test_security.model.BlockedRequisite;
 import com.example.test_security.service.BlockedRequisiteService;
 import com.example.test_security.util.ValidateRequisiteService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +57,13 @@ public class BlockedRequisiteController {
         System.out.println("requisiteId " + requisiteId + " ----username---- " + username);
         blockedRequisiteService.update(requisiteId, username);
         return "redirect:/black-list";
+    }
+
+    @GetMapping("/check")
+    @ResponseBody
+    public ResponseEntity<?> checkRequisite(
+                @RequestParam("REQUISITE") String requisite,
+                @RequestParam(value = "SERVICE_ID", required = false) ServiceId serviceId) {
+        return blockedRequisiteService.getStatus(requisite, serviceId);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.test_security.security;
 
 import com.example.test_security.enums.Permission;
-import com.example.test_security.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .formLogin().loginPage("/login").permitAll()
             .defaultSuccessUrl("/")
+            .and().httpBasic()
             .and()
             .logout()
             .invalidateHttpSession(true)

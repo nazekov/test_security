@@ -22,6 +22,8 @@ public interface BlockedRequisiteRepository
         String requisite, ServiceId serviceId
     );
 
+    Optional<BlockedRequisite> findFirstByRequisite(String requisite);
+
     List<BlockedRequisite> findDistinctByActual(boolean actual);
 
     @Query("FROM BlockedRequisite " +
