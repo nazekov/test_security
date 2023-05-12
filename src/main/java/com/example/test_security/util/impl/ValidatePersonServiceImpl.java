@@ -4,7 +4,6 @@ import com.example.test_security.model.Person;
 import com.example.test_security.service.PersonService;
 import com.example.test_security.util.ValidatePersonService;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -17,7 +16,7 @@ public class ValidatePersonServiceImpl implements ValidatePersonService {
     }
 
     @Override
-    public Optional<Person> findByUsername(Person person) {
-        return Optional.of(personService.findByUsername(person.getUsername()));
+    public boolean existsUsername(Person person) {
+        return personService.existsPersonByUsername(person.getUsername());
     }
 }

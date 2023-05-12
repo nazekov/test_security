@@ -22,23 +22,10 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.save(person);
     }
 
-//    @Override
-//    public boolean existsByRequisite(String requisite) {
-//        return personRepository.findByRequisite(requisite).isPresent();
-//    }
-
     @Override
     public List<Person> findAll() {
         return personRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
-
-//    @Override
-//    public Person findById(Long id) {
-//        return personRepository.findById(id)
-//                .orElseThrow(
-//        () -> new UserNotFoundException("Person with this id not found.")
-//                );
-//    }
 
     @Override
     public Person findByUsername(String username) {
@@ -48,11 +35,8 @@ public class PersonServiceImpl implements PersonService {
                 );
     }
 
-//    @Override
-//    public Person findByRequisite(String requisite) {
-//        return personRepository.findByRequisite(requisite)
-//                .orElseThrow(
-//        () -> new UserNotFoundException("Person with this Requisite not exists.")
-//                );
-//    }
+    @Override
+    public boolean existsPersonByUsername(String username) {
+        return personRepository.existsPersonByUsername(username);
+    }
 }

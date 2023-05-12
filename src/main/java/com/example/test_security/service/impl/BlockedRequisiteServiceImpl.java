@@ -61,11 +61,6 @@ public class BlockedRequisiteServiceImpl implements BlockedRequisiteService {
         return blockedRequisiteRepository.save(newBlockedRequisite);
     }
 
-//    @Override
-//    public List<BlockedRequisite> findAllBlockedPerson() {
-//        return blockedPersonRepository.findDistinctByActual(true);
-//    }
-
     @Override
     public BlockedRequisite ban(BlockedRequisite blockedRequisite, String username) {
 
@@ -84,7 +79,7 @@ public class BlockedRequisiteServiceImpl implements BlockedRequisiteService {
 
         if (allByRequisiteAndServiceId.size() != 0) {
             BlockedRequisite requisiteFound = allByRequisiteAndServiceId.stream()
-                    .filter(blockedRequisite1 -> blockedRequisite1.getActual() == true)
+                    .filter(BlockedRequisite::getActual)
                     .findFirst()
                     .orElseThrow(() -> new RequisiteNotFoundException("Реквизит не найден"));
             requisiteFound.setActual(false);
@@ -122,23 +117,22 @@ public class BlockedRequisiteServiceImpl implements BlockedRequisiteService {
 
     @Override
     public ResponseEntity<?> getStatus(String requisite, ServiceId serviceId) {
-        int httpStatus = 400;
-        if (serviceId != null) {
-            Optional<BlockedRequisite> optionalBlockedRequisite
-                = blockedRequisiteRepository.findFirstByRequisiteAndServiceId(
-                        requisite, serviceId
-                    );
-
-            if (optionalBlockedRequisite.isPresent()) {
-                httpStatus = 200;
-            }
-        } else {
-            Optional<BlockedRequisite> optionalBlockedRequisite
-                    = blockedRequisiteRepository.findFirstByRequisite(requisite);
-            if (optionalBlockedRequisite.isPresent()) {
-                httpStatus = 200;
-            }
-        }
+        int httpStatus = serviceId != null ?
+                        getNewStatus(requisite, serviceId) : getNewStatus(requisite);
         return ResponseEntity.status(httpStatus).body(null);
+    }
+
+    private int getNewStatus(String requisite) {
+        Optional<BlockedRequisite> optionalBlockedRequisite
+                = blockedRequisiteRepository.findFirstByRequisite(requisite);
+        return optionalBlockedRequisite.isPresent() ? 200 : 400;
+    }
+
+    private int getNewStatus(String requisite, ServiceId serviceId) {
+        Optional<BlockedRequisite> optionalBlockedRequisite
+            = blockedRequisiteRepository.findFirstByRequisiteAndServiceId(
+                requisite, serviceId
+        );
+        return optionalBlockedRequisite.isPresent() ? 200 : 400;
     }
 }

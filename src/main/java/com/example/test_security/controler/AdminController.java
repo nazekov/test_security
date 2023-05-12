@@ -51,7 +51,7 @@ public class AdminController {
 
         System.out.println("Map<String, String> " + data);
 
-        if (validatePersonService.findByUsername(person).isPresent()) {
+        if (validatePersonService.existsUsername(person)) {
             return "errors/add-error";
         }
         adminService.add(person);
