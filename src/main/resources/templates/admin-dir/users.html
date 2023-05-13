@@ -20,6 +20,7 @@
                     Имя:
                     <input type="text" id="name" name="name" placeholder="Имя" required="required">
                 </label>
+                <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{name}">Username Error</div>
             </p>
             <p>
                 <label for="username">
